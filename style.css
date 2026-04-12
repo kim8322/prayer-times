@@ -1,150 +1,359 @@
-/* Basisstijl voor body */
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --accent-primary: #38bdf8;
+    --accent-secondary: #22d3ee;
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --glass-blur: blur(12px);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom, #e0f7fa, #b2dfdb);
-    color: #333333;
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 80%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+.hijri {
+    font-family: 'Amiri', serif; /* خط عربي كلاسيكي */
+    font-size: 1.2rem;
+    color: #d4af37; /* لون ذهبي خفيف كيجي واعر مع التطبيقات الدينية */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    margin-top: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* إضافة حركات بسيطة عند ظهور النص */
+.text-reveal {
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Header */
+.main-header {
+    text-align: center;
+}
+
+.city-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.day-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.25rem;
+}
+
+.date-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.hijri {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: var(--accent-primary);
+}
+
+.gregorian {
+    font-size: 1rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Clock Section */
+.clock-section {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.main-clock {
+    font-size: 8rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -4px;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
+}
+
+.next-prayer-info {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    padding: 0.75rem 2rem;
+    border-radius: 100px;
+    display: inline-flex;
+    align-self: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    box-shadow: var(--card-shadow);
+}
+
+.next-prayer-info .label {
+    color: var(--text-dim);
+}
+
+.next-prayer-info .name {
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.next-prayer-info .countdown {
+    font-family: monospace;
+    font-weight: 600;
+}
+
+/* Prediction Cards Grid */
+.prayer-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.prayer-card {
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    padding: 2rem 1.5rem;
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
-    overflow: hidden;
+    gap: 1rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: default;
+    box-shadow: var(--card-shadow);
 }
 
-/* Bovenaan stijl */
-.header {
-    text-align: center;
-    margin-top: 20px;
-}
-.header h1 {
-    font-size: 2.5em;
-    color: #388e3c;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-.header p {
-    font-size: 1.2em;
-    color: #666666;
-    margin: 5px 0;
+.prayer-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-primary);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4);
 }
 
-/* Tijdweergave */
-.clock {
-    background: rgba(200, 230, 201, 0.4);
-    padding: 15px 30px;
-    border-radius: 12px;
-    font-size: 2.5em;
-    font-weight: bold;
-    color: #388e3c;
-    margin-bottom: 15px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.prayer-card.active {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
 }
 
-/* Afteltimer */
-.countdown {
-    font-size: 1.2em;
-    color: #388e3c;
-    margin-bottom: 30px;
-    text-align: center;
-    background: rgba(165, 214, 167, 0.5);
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Gebedstijden stijl */
-.prayer-times {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 20px;
+.prayer-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
 }
 
 .prayer-time {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 130px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-main);
 }
 
-.prayer-time:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+/* Footer */
+.main-footer {
+    display: flex;
+    justify-content: center;
 }
 
-.prayer-time h2 {
-    font-size: 1.2em;
-    margin: 0;
-    color: #2e7d32;
+.audio-toggle button {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: var(--glass-blur);
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.prayer-time .time {
-    font-size: 2em;
-    font-weight: bold;
-    color: #4caf50;
+.audio-toggle button svg {
+    width: 28px;
+    height: 28px;
+    transition: all 0.3s ease;
 }
 
-/* Responsief ontwerp voor kleinere schermen */
+.audio-toggle button.muted {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #ef4444;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.app-container>* {
+    animation: fadeIn 1s ease forwards;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .header h1 {
-        font-size: 2em;
+    .city-name {
+        font-size: 3rem;
     }
 
-    .clock {
-        font-size: 2em;
-        padding: 10px 20px;
+    .main-clock {
+        font-size: 5rem;
+        letter-spacing: -2px;
     }
 
-    .countdown {
-        font-size: 1em;
-    }
-
-    .prayer-time {
-        width: 100px;
-        padding: 15px;
-    }
-
-    .prayer-time h2 {
-        font-size: 1em;
-    }
-
-    .prayer-time .time {
-        font-size: 1.5em;
+    .prayer-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Extra responsief ontwerp voor zeer kleine schermen */
 @media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.8em;
+    .city-name {
+        font-size: 2.5rem;
     }
 
-    .clock {
-        font-size: 1.8em;
-        padding: 8px 15px;
+    .main-clock {
+        font-size: 4rem;
     }
 
-    .countdown {
-        font-size: 0.9em;
-    }
-
-    .prayer-time {
-        width: 90px;
-        padding: 10px;
-    }
-
-    .prayer-time h2 {
-        font-size: 0.9em;
-    }
-
-    .prayer-time .time {
-        font-size: 1.3em;
+    .prayer-cards-grid {
+        grid-template-columns: 1fr;
     }
 }
 
+/* Side Decorations */
+.side-decorations {
+    position: fixed;
+    top: 3rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 1;
+}
 
+.decor-card {
+    width: 500 px;
+    height: 500px;
+    background: var(--card-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--card-border);
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem;
+    box-shadow: var(--card-shadow);
+    opacity: 0.8;
+    animation: floating 6s ease-in-out infinite;
+}
+
+.decor-card.right {
+    animation-delay: 3s;
+}
+
+.decor-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@media (max-width: 1400px) {
+    .decor-card {
+        width: 140px;
+        height: 140px;
+        border-radius: 20px;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 1100px) {
+    .side-decorations {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 0 1rem;
+        margin-bottom: -2rem;
+        justify-content: center;
+        gap: 2rem;
+    }
+    
+    .decor-card {
+        width: 100px;
+        height: 100px;
+        animation: none;
+    }
+}
