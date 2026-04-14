@@ -299,7 +299,7 @@ body {
 }
 
 .decor-card {
-    width: 500 px;
+    width: 500px;
     height: 500px;
     background: var(--card-bg);
     backdrop-filter: var(--glass-blur);

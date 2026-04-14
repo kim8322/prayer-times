@@ -114,15 +114,22 @@ function findNextPrayer(now) {
     if (currentCard) currentCard.classList.add('active');
 }
 
+let lastAdanPlayed = "";
+
 function checkAdan(h, m, s) {
-    if (!audioEnabled || s !== "00") return;
+    if (!audioEnabled) return;
 
     const currentTime = `${h}:${m}`;
-    // Sanitize to handle cases where API returns "05:12 (WET)"
+    
+    // Check if we already played for this prayer minute
+    if (currentTime === lastAdanPlayed) return;
+
+    // Sanitize and check against prayer times
     const sanitizedTimes = Object.values(prayerTimes).map(t => t.split(' ')[0]);
 
     if (sanitizedTimes.includes(currentTime)) {
-        console.log(`Triggering Adan at ${currentTime}`);
+        lastAdanPlayed = currentTime; // Mark as played
+        console.log(` Adan Triggered at ${currentTime}`);
         adanAudio.currentTime = 0;
         adanAudio.play().catch(e => console.error("Adan playback blocked by browser:", e));
     }
@@ -150,7 +157,7 @@ async function fetchPrayerTimes() {
             // Core timings to display
             const corePrayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
             prayerTimes = {};
-            
+
             corePrayers.forEach(p => {
                 if (data.timings[p]) {
                     prayerTimes[p] = data.timings[p].split(' ')[0];
